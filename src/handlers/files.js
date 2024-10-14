@@ -1,5 +1,7 @@
 import { readFile, writeFile, rename, rm } from 'node:fs/promises';
-import { join } from 'node:path';
+import { pipeline } from 'node:stream/promises';
+import { createReadStream, createWriteStream } from 'node:fs';
+import { join, resolve } from 'node:path';
 
 const getFilePath = (fileName) => {
   const [file] = fileName;
@@ -37,6 +39,28 @@ const renameFile = async (params) => {
 
 };
 
+const copyFile = async (params) => {
+  const [source, dest] = params;
+  if (!source || !dest) {
+    console.warn(`Invalid operation: arguments are invalids`);
+    return;
+  } else {
+    try {
+      const src = join(process.cwd(), source);
+      const target = resolve(process.cwd(), dest);
+
+      const srcStream = createReadStream(src, { encoding: 'utf8' });
+      const targetStream = createWriteStream(target);
+
+      await pipeline(srcStream, targetStream);
+    } catch {
+      console.error(`Operation failed: could not copy file`);
+
+    }
+
+  }
+}
+
 const deleteFile = async (src) => {
   try {
     await rm(src);
@@ -59,7 +83,7 @@ export const filesHandler = (command, params) => {
         renameFile(params);
         break;
       case 'cp':
-        toParentFolder(params);
+        copyFile(params);
         break;
       case 'mv':
         toFolder(params);
