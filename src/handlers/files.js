@@ -1,10 +1,12 @@
-import { readFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
-const readFileContent = async (params) => {
-  const [dest] = params;
-  const src = join(process.cwd(), dest);
+const getFilePath = (fileName) => {
+  const [file] = fileName;
+  return join(process.cwd(), file);
+}
 
+const readFileContent = async (src) => {
   try {
     const content = await readFile(src, { encoding: 'utf8' });
     console.log(content);
@@ -13,14 +15,22 @@ const readFileContent = async (params) => {
   }
 };
 
+const createEmptyFile = async (src) => {
+  try {
+    await writeFile(src, '', { flag: 'wx' });
+  } catch {
+    console.error(`Operation failed: could not create file ${src}`);
+  }
+};
+
 export const filesHandler = (command, params) => {
   try {
     switch (command) {
       case 'cat':
-        readFileContent(params);
+        readFileContent(getFilePath(params));
         break;
       case 'add':
-        toFolder(params);
+        createEmptyFile(getFilePath(params));
         break;
       case 'rn':
         showFolderContent(params);
