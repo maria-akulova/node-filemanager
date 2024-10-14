@@ -2,6 +2,7 @@ import * as os from 'node:os';
 import { rl, exitGracefully } from '../../index.js';
 import { navigationHandler } from './navigation.js';
 import { invalidInput, unexpectedError } from '../utils/messages.js';
+import { filesHandler } from './files.js';
 
 
 const homeDirectory = os.homedir();
@@ -27,6 +28,14 @@ const handleInput = async (input) => {
       case 'cd':
       case 'ls':
         navigationHandler(command, params);
+        break;
+      case 'cat':
+      case 'add':
+      case 'rn':
+      case 'cp':
+      case 'mv':
+      case 'rm':
+        filesHandler(command, params);
         break;
       default:
         invalidInput(command);
