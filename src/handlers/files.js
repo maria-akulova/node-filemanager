@@ -1,4 +1,4 @@
-import { readFile, writeFile } from 'node:fs/promises';
+import { readFile, writeFile, rename } from 'node:fs/promises';
 import { join } from 'node:path';
 
 const getFilePath = (fileName) => {
@@ -22,6 +22,19 @@ const createEmptyFile = async (src) => {
     console.error(`Operation failed: could not create file ${src}`);
   }
 };
+const renameFile = async (params) => {
+  const [currentName, newName] = params;
+  const currDir = process.cwd();
+  const src = join(currDir, currentName);
+  const dist = join(currDir, newName);
+  try {
+    rename(src, dist)
+  } catch {
+    console.error(`Operation failed: could not rename file ${src}`);
+
+  }
+
+};
 
 export const filesHandler = (command, params) => {
   try {
@@ -33,7 +46,7 @@ export const filesHandler = (command, params) => {
         createEmptyFile(getFilePath(params));
         break;
       case 'rn':
-        showFolderContent(params);
+        renameFile(params);
         break;
       case 'cp':
         toParentFolder(params);
