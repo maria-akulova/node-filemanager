@@ -34,30 +34,37 @@ const renameFile = async (params) => {
     rename(src, dist)
   } catch {
     console.error(`Operation failed: could not rename file ${src}`);
-
   }
-
 };
 
 const copyFile = async (params) => {
-  const [source, dest] = params;
-  if (!source || !dest) {
+  const [sourceFile, destFolder] = params;
+  if (!sourceFile || !destFolder) {
     console.warn(`Invalid operation: arguments are invalids`);
     return;
   } else {
     try {
-      const src = join(process.cwd(), source);
-      const target = resolve(process.cwd(), dest);
+      const src = join(process.cwd(), sourceFile);
+      const target = resolve(process.cwd(), destFolder);
+      const targetPath = join(target, sourceFile);
 
       const srcStream = createReadStream(src, { encoding: 'utf8' });
-      const targetStream = createWriteStream(target);
+      const targetStream = createWriteStream(targetPath);
 
       await pipeline(srcStream, targetStream);
     } catch {
       console.error(`Operation failed: could not copy file`);
-
     }
+  }
+}
 
+const moveFile = async (params) => {
+
+  try {
+    await copyFile(params);
+    await deleteFile(getFilePath(params));
+  } catch {
+    console.error(`Operation failed: could not move file`);
   }
 }
 
@@ -67,7 +74,6 @@ const deleteFile = async (src) => {
   } catch {
     console.error(`Operation failed: could not delete file ${src}`);
   }
-
 };
 
 export const filesHandler = (command, params) => {
@@ -86,7 +92,7 @@ export const filesHandler = (command, params) => {
         copyFile(params);
         break;
       case 'mv':
-        toFolder(params);
+        moveFile(params);
         break;
       case 'rm':
         deleteFile(getFilePath(params));
