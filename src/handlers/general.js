@@ -3,6 +3,7 @@ import { rl, exitGracefully } from '../../index.js';
 import { navigationHandler } from './navigation.js';
 import { invalidInput, unexpectedError } from '../utils/messages.js';
 import { filesHandler } from './files.js';
+import { sysOperations } from './sysoperation.js';
 
 
 const homeDirectory = os.homedir();
@@ -36,6 +37,9 @@ const handleInput = async (input) => {
       case 'mv':
       case 'rm':
         filesHandler(command, params);
+        break;
+      case 'os':
+        sysOperations(params);
         break;
       default:
         invalidInput(command);
