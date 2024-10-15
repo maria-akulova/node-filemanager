@@ -4,7 +4,7 @@ import { navigationHandler } from './navigation.js';
 import { invalidInput, unexpectedError } from '../utils/messages.js';
 import { filesHandler } from './files.js';
 import { sysOperations } from './sysoperation.js';
-
+import { hashCalc } from './hashCalc.js';
 
 const homeDirectory = os.homedir();
 process.chdir(homeDirectory);
@@ -40,6 +40,9 @@ const handleInput = async (input) => {
         break;
       case 'os':
         sysOperations(params);
+        break;
+      case 'hash':
+        hashCalc(params);
         break;
       default:
         invalidInput(command);
