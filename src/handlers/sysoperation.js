@@ -9,10 +9,22 @@ const printEOL = () => {
 }
 
 const hostCpusInfo = () => {
-  console.log(`Amount of CPUs is ${availableParallelism()}`);
+  console.log(`Amount of CPUS is ${availableParallelism()}`);
   const allCpus = cpus();
   allCpus.map((cpu, index) => console.log(`${index} model: ${cpu.model}, clock rate: ${(cpu.speed / 1000).toFixed(2)} GHz`))
+}
 
+const homedirectory = () => {
+  console.log(`Home directory is ${homedir}`);
+}
+
+const sysUserName = () => {
+  const { username } = userInfo();
+  console.log(`Current system user name is ${username}`);
+}
+
+const architectureCPUS = () => {
+  console.log(`operating system CPU architecture is ${arch()}`);
 }
 
 export const sysOperations = (params) => {
@@ -31,13 +43,13 @@ export const sysOperations = (params) => {
           hostCpusInfo();
           break;
         case 'homedir':
-          start(params);
+          homedirectory();
           break;
         case 'username':
-          start(params);
+          sysUserName();
           break;
         case 'architecture':
-          start(params);
+          architectureCPUS();
           break;
 
         default:
