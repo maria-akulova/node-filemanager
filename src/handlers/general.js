@@ -5,6 +5,7 @@ import { invalidInput, unexpectedError } from '../utils/messages.js';
 import { filesHandler } from './files.js';
 import { sysOperations } from './sysoperation.js';
 import { hashCalc } from './hashCalc.js';
+import { compressFile, decompressFile } from './zip.js';
 
 const homeDirectory = os.homedir();
 process.chdir(homeDirectory);
@@ -44,12 +45,17 @@ const handleInput = async (input) => {
       case 'hash':
         hashCalc(params);
         break;
+      case 'compress':
+        compressFile(params);
+        break;
+      case 'decompress':
+        decompressFile(params);
+        break;
       default:
         invalidInput(command);
     }
   } catch (err) {
     unexpectedError(input, err);
-
   }
   promptUser();
 };
